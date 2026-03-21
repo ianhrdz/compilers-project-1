@@ -26,6 +26,7 @@ void runPrompt(){
         if(!getline(cin,line)) break;
 
         run(line);
+        hadError = false;
     }
 }
 
@@ -39,12 +40,23 @@ void run(const string& source) {
     
 }
 
+void error(int line, const string& message){
+    report(line, "" , message);
+}
+
+bool hadError = false;
+void report(int line, const string& where, const string& message){
+    cerr << "[line" << line << "] Error" << where << ": " << message << endl;
+    hadError= true;
+}
+
 int main(int argc, char* argv[]){
     if(argc > 2){
         cout << "Usage: jlox [script]";
         return 64;
     } else if(argc == 2){
         runFile(argv[1]);
+        if(hadError) return 65;
     } else{
         runPrompt();
     }
