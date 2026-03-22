@@ -24,4 +24,5 @@ private:
     void addToken(TokenType type, std::string literal);
     bool match(char expected);
     char peek();
+    void string();
 };

@@ -54,12 +54,13 @@ void Scanner::scanToken() {
         case ' ':
         case '\r':
         case '\t':
-        // Ignore whitespace.
+        // Ignore whitespace
             break;
 
         case '\n':
             line++;
             break;
+        case '"': string(); break;    
 
         default: 
             error(line, "Unexpected character,");
@@ -92,3 +93,22 @@ char Scanner::peek(){
     if (isAtEnd()) return '\0';
     return source[current];
 }
+
+void Scanner::string() {
+    while (peek() != '"' && !isAtEnd()) {
+      if (peek() == '\n') line++;
+      advance();
+    }
+
+    if (isAtEnd()) {
+      error(line, "Unterminated string.");
+      return;
+    }
+
+    // The closing ".
+    advance();
+
+    // Trim the surrounding quotes.
+    std::string value = source.substr(start + 1, current - start - 2);
+    addToken(TokenType::STRING, value);
+  }
