@@ -25,4 +25,7 @@ private:
     bool match(char expected);
     char peek();
     void string();
+    bool isDigit(char c);
+    void number();
+    char peekNext();
 };

@@ -45,25 +45,31 @@ void Scanner::scanToken() {
             addToken(match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER); break; 
         case '/':
         if (match('/')) {
-          // A comment goes until the end of the line.
+          // allows for comments basically
           while (!isAtEnd() && peek() != '\n') advance();
         } else {
           addToken(TokenType::SLASH);
         }
         break;
+//whitespace
         case ' ':
         case '\r':
         case '\t':
-        // Ignore whitespace
+
             break;
 
         case '\n':
             line++;
             break;
+// strings    
         case '"': string(); break;    
-
-        default: 
+//numbers and error        
+        default:
+            if(isDigit(c)){
+                number();
+            }else{ 
             error(line, "Unexpected character,");
+            }
             break;
     }
 }
@@ -80,7 +86,7 @@ void Scanner::addToken(TokenType type, std::string literal){
     std::string text = source.substr(start, current - start);
     tokens.push_back(Token(type, text, literal, line));
 }
-
+//helper to handle two character operators 
 bool Scanner::match(char expected){
     if (isAtEnd()) return false;
     if (source[current]!= expected) return false;
@@ -105,10 +111,30 @@ void Scanner::string() {
       return;
     }
 
-    // The closing ".
     advance();
 
-    // Trim the surrounding quotes.
+    // returns the actual string minus quotes
     std::string value = source.substr(start + 1, current - start - 2);
     addToken(TokenType::STRING, value);
   }
+
+bool Scanner::isDigit(char c){
+    return c>= '0' && c <= '9';
+}
+void Scanner::number(){
+     while (isDigit(peek())) advance();
+
+    if (peek() == '.' && isDigit(peekNext())) {
+
+      advance();
+
+      while (isDigit(peek())) advance();
+    }
+
+    addToken(TokenType::NUMBER, source.substr(start, current - start));
+}
+
+char Scanner::peekNext() {
+    if (current + 1 >= source.length()) return '\0';
+    return source[current + 1];
+}
