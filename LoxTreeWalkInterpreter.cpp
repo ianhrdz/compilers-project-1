@@ -3,8 +3,19 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
+#include "Token.h"
+#include "Scanner.h"
 using namespace std;
+
+void run(const string& source) {
+    Scanner scanner(source);
+    vector<Token> tokens= scanner.scanTokens();
+
+    for(const Token& token : tokens){
+        cout << token.toString() << endl;
+    }
+    
+}
 
 
 void runFile(const string& path){
@@ -18,6 +29,8 @@ void runFile(const string& path){
     run(source);
 }
 
+bool hadError = false;
+
 void runPrompt(){
     string line;
 
@@ -30,21 +43,10 @@ void runPrompt(){
     }
 }
 
-void run(const string& source) {
-    Scanner scanner(source);
-    vector<Token> tokens= scanner.scanTokens();
+void report(int line, const std::string& where, const std::string& message);
 
-    for(const Token& token : tokens){
-        cout << token << endl;
-    }
-    
-}
+void error(int line, const string& message);
 
-void error(int line, const string& message){
-    report(line, "" , message);
-}
-
-bool hadError = false;
 void report(int line, const string& where, const string& message){
     cerr << "[line" << line << "] Error" << where << ": " << message << endl;
     hadError= true;

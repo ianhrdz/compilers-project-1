@@ -6,7 +6,7 @@ class Token {
 public:
     TokenType type;
     std::string lexeme;
-    std::string literal; // we'll simplify from Object
+    std::string literal; 
     int line;
 
     Token(TokenType type, const std::string& lexeme,
