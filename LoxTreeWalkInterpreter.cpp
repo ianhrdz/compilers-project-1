@@ -45,7 +45,9 @@ void runPrompt(){
 
 void report(int line, const std::string& where, const std::string& message);
 
-void error(int line, const string& message);
+void error(int line, const std::string& message){
+    report(line, "", message);
+}
 
 void report(int line, const string& where, const string& message){
     cerr << "[line" << line << "] Error" << where << ": " << message << endl;
