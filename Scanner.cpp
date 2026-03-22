@@ -1,7 +1,28 @@
 #include <iostream>
+#include <string>
+#include <unordered_map>
 #include "Scanner.h"
 #include "TokenType.h"
 #include "Lox.h"
+
+static std::unordered_map<std::string, TokenType> keywords = {
+    {"and", TokenType::AND},
+    {"class", TokenType::CLASS},
+    {"else", TokenType::ELSE},
+    {"false", TokenType::FALSE},
+    {"for", TokenType::FOR},
+    {"fun", TokenType::FUN},
+    {"if", TokenType::IF},
+    {"nil", TokenType::NIL},
+    {"or", TokenType::OR},
+    {"print", TokenType::PRINT},
+    {"return", TokenType::RETURN},
+    {"super", TokenType::SUPER},
+    {"this", TokenType::THIS},
+    {"true", TokenType::TRUE},
+    {"var", TokenType::VAR},
+    {"while", TokenType::WHILE}
+};
 
 using std::string;
 using std::vector;
@@ -63,12 +84,14 @@ void Scanner::scanToken() {
             break;
 // strings    
         case '"': string(); break;    
-//numbers and error        
+//numbers, keywords, and errors        
         default:
             if(isDigit(c)){
                 number();
-            }else{ 
-            error(line, "Unexpected character,");
+            } else if (isAlpha(c)) {
+                identifier();
+            } else{ 
+                error(line, "Unexpected character,");
             }
             break;
     }
@@ -137,4 +160,27 @@ void Scanner::number(){
 char Scanner::peekNext() {
     if (current + 1 >= source.length()) return '\0';
     return source[current + 1];
+}
+
+bool Scanner::isAlpha(char c){
+     return (c >= 'a' && c <= 'z') ||
+            (c >= 'A' && c <= 'Z') ||
+             c == '_';
+}
+
+bool Scanner::isAlphaNumeric(char c) {
+    return isAlpha(c) || isDigit(c);
+  }
+
+void Scanner::identifier(){
+    while(isAlphaNumeric(peek())) advance();
+
+    std::string text = source.substr(start, current - start);
+    
+    auto it = keywords.find(text);
+    if (it != keywords.end()) {
+        addToken(it->second);
+    } else {
+        addToken(TokenType::IDENTIFIER);
+    }
 }

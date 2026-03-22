@@ -28,4 +28,7 @@ private:
     bool isDigit(char c);
     void number();
     char peekNext();
+    bool isAlpha(char c);
+    bool isAlphaNumeric(char c);
+    void identifier();
 };
