@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Scanner.h"
 #include "TokenType.h"
+#include "Lox.h"
 
 using std::string;
 using std::vector;
@@ -34,6 +35,9 @@ void Scanner::scanToken() {
         case '+': addToken(TokenType::PLUS); break;
         case ';': addToken(TokenType::SEMICOLON); break;
         case '*': addToken(TokenType::STAR); break; 
+        default: 
+            error(line, "Unexpected character,");
+            break;
     }
 }
 
