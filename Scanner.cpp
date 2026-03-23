@@ -34,8 +34,9 @@ std::vector<Token> Scanner::scanTokens() {
         start = current;
         scanToken();
     }
+    // EOF token so parser knows its the end of input
+    tokens.push_back(Token(TokenType::EOF_TOKEN, "", std::monostate{}, line));
 
-    
     return tokens;
 }
 
@@ -102,10 +103,10 @@ char Scanner::advance(){
 }
 
 void Scanner::addToken(TokenType type){
-    addToken(type, "");
+    addToken(type, std::monostate{});
 }
 
-void Scanner::addToken(TokenType type, std::string literal){
+void Scanner::addToken(TokenType type, const LiteralValue& literal){
     std::string text = source.substr(start, current - start);
     tokens.push_back(Token(type, text, literal, line));
 }
@@ -154,7 +155,9 @@ void Scanner::number(){
       while (isDigit(peek())) advance();
     }
 
-    addToken(TokenType::NUMBER, source.substr(start, current - start));
+    std::string text = source.substr(start, current - start);
+    double value = std::stod(text);
+    addToken(TokenType::NUMBER, value);
 }
 
 char Scanner::peekNext() {

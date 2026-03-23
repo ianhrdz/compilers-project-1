@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "Token.h"
+#include "LiteralValue.h"
 
 class Scanner{
 public:
@@ -21,7 +22,7 @@ private:
     void scanToken();
     char advance();
     void addToken(TokenType type);
-    void addToken(TokenType type, std::string literal);
+    void addToken(TokenType type, const LiteralValue& literal);
     bool match(char expected);
     char peek();
     void string();

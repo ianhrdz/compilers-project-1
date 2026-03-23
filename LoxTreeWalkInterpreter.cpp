@@ -5,6 +5,7 @@
 #include <vector>
 #include "Token.h"
 #include "Scanner.h"
+#include "Parser.h"
 using namespace std;
 
 void run(const string& source) {
@@ -15,6 +16,14 @@ void run(const string& source) {
         cout << token.toString() << endl;
     }
     
+    Parser parser(tokens);
+    Expr* expression = parser.parse();
+
+    if (expression != nullptr) {
+        cout << "Parse success" << endl;
+    } else {
+        cout << "Parse failed" << endl;
+    }
 }
 
 

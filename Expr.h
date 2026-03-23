@@ -1,3 +1,4 @@
+// AST expression node structure based on "Crafting Interpreters" by Robert Nystrom but I used chatgpt sort of to explain and translate concepts and syntax
 #pragma once
 
 #include "Token.h"
@@ -28,9 +29,9 @@ public:
 
 class Literal : public Expr {
 public:
-    std::string value;
+    LiteralValue value;
 
-    Literal(std::string value)
+    Literal(const LiteralValue& value)
         : value(value) {}
 };
 

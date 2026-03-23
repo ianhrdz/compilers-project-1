@@ -1,16 +1,17 @@
 #pragma once
 #include <string>
 #include "TokenType.h"
+#include "LiteralValue.h"
 
 class Token {
 public:
     TokenType type;
     std::string lexeme;
-    std::string literal; 
+    LiteralValue literal; 
     int line;
 
     Token(TokenType type, const std::string& lexeme,
-          const std::string& literal, int line);
+          const LiteralValue& literal, int line);
 
     std::string toString() const;
 };
