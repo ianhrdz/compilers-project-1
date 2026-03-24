@@ -6,24 +6,43 @@
 #include "Token.h"
 #include "Scanner.h"
 #include "Parser.h"
+#include "Interpreter.h"
+
 using namespace std;
 
 void run(const string& source) {
     Scanner scanner(source);
     vector<Token> tokens= scanner.scanTokens();
 
-    for(const Token& token : tokens){
-        cout << token.toString() << endl;
-    }
+    //for(const Token& token : tokens){
+        //cout << token.toString() << endl;
+    //}
     
     Parser parser(tokens);
     Expr* expression = parser.parse();
 
-    if (expression != nullptr) {
-        cout << "Parse success" << endl;
-    } else {
+    if (expression == nullptr) {
         cout << "Parse failed" << endl;
+        return;
     }
+
+    Interpreter interpreter;
+    LiteralValue result = interpreter.evaluate(expression);
+
+    std::visit([](auto&& val) {
+        using T = std::decay_t<decltype(val)>;
+
+        if constexpr (std::is_same_v<T, std::monostate>) {
+            cout << "no literal" << endl;
+        } else if constexpr (std::is_same_v<T, std::nullptr_t>) {
+            cout << "nil" << endl;
+        } else if constexpr (std::is_same_v<T, bool>) {
+            cout << (val ? "true" : "false") << endl;
+        } else {
+            cout << val << endl;
+        }
+    }, result);
+
 }
 
 
